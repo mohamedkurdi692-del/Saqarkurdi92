@@ -1,12 +1,13 @@
 FROM golang:1.21-alpine AS builder
 WORKDIR /app
 
-# نسخ ملف التعريف وتنزل التبعيات وتوليد البصمات تلقائياً
+# نسخ ملف go.mod وتنزيل التبعيات وتوليد ملف البصمات تلقائياً
 COPY go.mod ./
 RUN go env -w GO111MODULE=on
 RUN go get gopkg.in/telebot.v3
+RUN go mod tidy
 
-# نسخ باقي الكود وبناء البرنامج بدون التحقق الحارم من go.sum
+# نسخ بقية الكود وبناء تطبيق Go
 COPY . .
 RUN go build -o bot main.go
 
